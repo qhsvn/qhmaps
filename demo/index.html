@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QH Maps</title>
+  <link rel="stylesheet" href="vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="map"></div>
+
+  <div class="traffic-card">
+    <label class="traffic-toggle">
+      <span>Giao thông</span>
+      <input id="traffic-toggle" type="checkbox" checked>
+      <span class="switch" aria-hidden="true"></span>
+    </label>
+    <div class="traffic-legend">
+      <span>Nhanh</span>
+      <span class="bar"><i style="--c:#1e9e47"></i><i style="--c:#6cc644"></i><i style="--c:#f5c518"></i><i style="--c:#f2711c"></i><i style="--c:#d93025"></i></span>
+      <span>Chậm</span>
+    </div>
+  </div>
+
+  <script src="vendor/maplibre-gl.js"></script>
+  <script src="vendor/pmtiles.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
