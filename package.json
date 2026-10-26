@@ -1,0 +1,15 @@
+{
+  "name": "qhmaps",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Style bản đồ MapLibre/MapTiler (OpenStreetMap) giao diện giống Google Maps",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-style.mjs",
+    "validate": "node scripts/validate-style.mjs",
+    "serve": "npx --yes http-server -c-1 -p 8080 ."
+  },
+  "devDependencies": {
+    "@maplibre/maplibre-gl-style-spec": "^26.4.0"
+  }
+}
