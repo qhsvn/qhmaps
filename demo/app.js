@@ -1,30 +1,18 @@
 import { registerPoiIcons } from './icons.js';
 import { startSimulatedTraffic } from './traffic.js';
 
-const STYLE_URL = '../styles/google-like.json';
-const KEY_STORAGE = 'qhmaps:maptiler-key';
+// Mọi thứ (style, tile, font, thư viện) đều nằm trong repo; không gọi API bên ngoài.
+// {base} trong style = thư mục gốc của repo trên web server.
+const BASE = new URL('..', location.href).href.replace(/\/$/, '');
+const STYLE_URL = `${BASE}/styles/google-like.json`;
 
-function readKey() {
-  const fromUrl = new URLSearchParams(location.search).get('key');
-  if (fromUrl) return fromUrl;
-  try { return localStorage.getItem(KEY_STORAGE); } catch { return null; }
-}
-
-function askKey() {
-  const form = document.getElementById('key-form');
-  form.hidden = false;
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const key = new FormData(form).get('key').trim();
-    try { localStorage.setItem(KEY_STORAGE, key); } catch { /* chế độ ẩn danh */ }
-    form.hidden = true;
-    start(key);
-  });
-}
-
-async function loadStyle(key) {
+async function loadStyle() {
   const text = await (await fetch(STYLE_URL)).text();
-  return JSON.parse(text.replaceAll('{key}', encodeURIComponent(key)));
+  const style = JSON.parse(text.replaceAll('{base}', BASE));
+  // ?tiles=data/khac.pmtiles để thử file tile khác.
+  const tiles = new URLSearchParams(location.search).get('tiles');
+  if (tiles) style.sources.openmaptiles.url = `pmtiles://${new URL(tiles, `${BASE}/`).href}`;
+  return style;
 }
 
 function addPlaceMarker(map, lngLat, title) {
@@ -53,31 +41,13 @@ function setupTrafficToggle(map) {
   apply();
 }
 
-function setupSatellite(map, key) {
-  const button = document.getElementById('layer-switch');
-  const label = button.querySelector('.label');
-  map.addSource('satellite', {
-    type: 'raster',
-    tiles: [`https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${encodeURIComponent(key)}`],
-    tileSize: 512,
-    maxzoom: 20,
-    attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a>',
-  });
-  // Ảnh vệ tinh phủ lên nền, đường và nhãn vẫn nằm trên.
-  map.addLayer({ id: 'satellite', type: 'raster', source: 'satellite', layout: { visibility: 'none' } }, 'road-tunnel');
-  button.addEventListener('click', () => {
-    const on = button.getAttribute('aria-pressed') !== 'true';
-    button.setAttribute('aria-pressed', String(on));
-    label.textContent = on ? 'Bản đồ' : 'Vệ tinh';
-    map.setLayoutProperty('satellite', 'visibility', on ? 'visible' : 'none');
-    for (const id of ['building', 'building-3d']) map.setLayoutProperty(id, 'visibility', on ? 'none' : 'visible');
-  });
-}
+async function start() {
+  const protocol = new pmtiles.Protocol();
+  maplibregl.addProtocol('pmtiles', protocol.tile);
 
-async function start(key) {
   const map = new maplibregl.Map({
     container: 'map',
-    style: await loadStyle(key),
+    style: await loadStyle(),
     hash: true,
     attributionControl: { compact: true },
   });
@@ -91,11 +61,9 @@ async function start(key) {
   map.once('load', () => {
     registerPoiIcons(map);
     setupTrafficToggle(map);
-    setupSatellite(map, key);
     startSimulatedTraffic(map);
     addPlaceMarker(map, [106.6953, 10.7770], 'Dinh Độc Lập');
   });
 }
 
-const key = readKey();
-if (key) start(key); else askKey();
+start();

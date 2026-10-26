@@ -70,7 +70,7 @@ function simulate(map, seed) {
   const features = [];
   const roads = map.querySourceFeatures('openmaptiles', {
     sourceLayer: 'transportation',
-    filter: ['in', ['get', 'class'], ['literal', ROAD_CLASSES]],
+    filter: ['all', ['in', ['get', 'class'], ['literal', ROAD_CLASSES]], ['!=', ['get', 'brunnel'], 'tunnel']],
   });
   for (const f of roads) {
     const g = f.geometry;

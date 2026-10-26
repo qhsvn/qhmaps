@@ -10,16 +10,6 @@
 html, body { margin: 0; height: 100%; background: #f5f1e6; color: var(--text); }
 #map { position: absolute; inset: 0; }
 
-#key-form {
-  position: absolute; z-index: 10; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: min(360px, calc(100% - 32px)); box-sizing: border-box; padding: 20px;
-  background: var(--card); border-radius: 12px; box-shadow: var(--shadow);
-}
-#key-form h1 { font-size: 18px; margin: 0 0 8px; }
-#key-form p { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
-#key-form input { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #dadce0; border-radius: 8px; font: inherit; }
-#key-form button { margin-top: 12px; padding: 9px 16px; border: 0; border-radius: 8px; background: var(--blue); color: #fff; font: inherit; cursor: pointer; }
-
 .traffic-card {
   position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%);
   background: var(--card); border-radius: 12px; box-shadow: var(--shadow);
@@ -36,16 +26,6 @@ html, body { margin: 0; height: 100%; background: #f5f1e6; color: var(--text); }
 .traffic-card.off .traffic-legend { display: none; }
 .bar { display: flex; gap: 2px; }
 .bar i { width: 18px; height: 5px; border-radius: 3px; background: var(--c); }
-
-.layer-switch {
-  position: absolute; left: 12px; bottom: 28px; width: 72px; height: 72px; padding: 0;
-  border: 2px solid #fff; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow);
-  cursor: pointer; background: #6b7d55;
-}
-.layer-switch .thumb { position: absolute; inset: 0; background: linear-gradient(135deg, #4d5e3a, #8a9a6a 55%, #b3b09a); }
-.layer-switch[aria-pressed="true"] .thumb { background: linear-gradient(135deg, #f5f1e6, #bde4a7 50%, #90c8f8); }
-.layer-switch .label { position: absolute; left: 0; right: 0; bottom: 4px; color: #fff; font-size: 12px; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
-.layer-switch[aria-pressed="true"] .label { color: var(--text); text-shadow: none; }
 
 .place-label {
   font-size: 15px; font-weight: 500; color: #c5221f; white-space: nowrap;

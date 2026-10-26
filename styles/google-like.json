@@ -26,8 +26,8 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "https://api.maptiler.com/tiles/v3/tiles.json?key={key}",
-      "attribution": "<a href=\"https://www.maptiler.com/copyright/\" target=\"_blank\">&copy; MapTiler</a> <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>"
+      "url": "pmtiles://{base}/data/hcmc.pmtiles",
+      "attribution": "<a href=\"https://openmaptiles.org/\" target=\"_blank\">&copy; OpenMapTiles</a> <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">&copy; OpenStreetMap contributors</a>"
     },
     "traffic": {
       "type": "geojson",
@@ -37,7 +37,7 @@
       }
     }
   },
-  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key={key}",
+  "glyphs": "{base}/assets/fonts/{fontstack}/{range}.pbf",
   "layers": [
     {
       "id": "background",
@@ -1185,13 +1185,33 @@
             [
               "zoom"
             ],
-            6,
+            4,
             15,
-            15,
+            8,
             16,
-            30,
+            14,
             17,
+            30,
+            18,
             99
+          ]
+        ],
+        [
+          "any",
+          [
+            "!=",
+            [
+              "get",
+              "class"
+            ],
+            "bus"
+          ],
+          [
+            ">=",
+            [
+              "zoom"
+            ],
+            17
           ]
         ]
       ],
@@ -1536,7 +1556,7 @@
           ]
         ],
         "text-font": [
-          "Noto Sans Bold"
+          "Noto Sans Medium"
         ],
         "text-size": [
           "interpolate",
@@ -1592,7 +1612,7 @@
           ]
         ],
         "text-font": [
-          "Noto Sans Bold"
+          "Noto Sans Medium"
         ],
         "text-size": [
           "interpolate",
@@ -1642,7 +1662,7 @@
           ]
         ],
         "text-font": [
-          "Noto Sans Bold"
+          "Noto Sans Medium"
         ],
         "text-size": 14,
         "text-transform": "uppercase"

@@ -83,7 +83,7 @@ const poiColor = ['match', poiCategory, ...Object.entries(POI_COLORS).flatMap(([
 const zoomInterp = (...stops) => ['interpolate', ['exponential', 1.5], ['zoom'], ...stops];
 
 const FONT = ['Noto Sans Regular'];
-const FONT_MEDIUM = ['Noto Sans Bold'];
+const FONT_MEDIUM = ['Noto Sans Medium'];
 
 const src = 'openmaptiles';
 
@@ -253,7 +253,12 @@ const layers = [
   },
   {
     id: 'poi', type: 'symbol', source: src, 'source-layer': 'poi', minzoom: 14,
-    filter: ['all', ['has', 'name'], ['<=', ['coalesce', ['get', 'rank'], 99], ['step', ['zoom'], 6, 15, 15, 16, 30, 17, 99]]],
+    // Giống Google: ít POI khi nhìn xa, trạm xe buýt chỉ hiện khi zoom gần.
+    filter: ['all',
+      ['has', 'name'],
+      ['<=', ['coalesce', ['get', 'rank'], 99], ['step', ['zoom'], 4, 15, 8, 16, 14, 17, 30, 18, 99]],
+      ['any', ['!=', ['get', 'class'], 'bus'], ['>=', ['zoom'], 17]],
+    ],
     layout: {
       'icon-image': ['concat', 'poi-', poiCategory],
       'icon-size': 1,
@@ -317,12 +322,14 @@ const style = {
   sources: {
     openmaptiles: {
       type: 'vector',
-      url: 'https://api.maptiler.com/tiles/v3/tiles.json?key={key}',
-      attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+      // Tile tự host: file PMTiles do scripts/build-tiles.sh tạo từ dữ liệu OSM.
+      // {base} là thư mục gốc nơi đặt repo trên web server (ứng dụng thay khi nạp style).
+      url: 'pmtiles://{base}/data/hcmc.pmtiles',
+      attribution: '<a href="https://openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
     },
     traffic: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
   },
-  glyphs: 'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key={key}',
+  glyphs: '{base}/assets/fonts/{fontstack}/{range}.pbf',
   layers,
 };
 
